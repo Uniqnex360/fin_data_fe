@@ -1,13 +1,13 @@
 "use client";
 
 import { ThemeToggleButton } from "@/components/common/ThemeToggleButton";
-import NotificationDropdown from "@/components/header/NotificationDropdown";
-import UserDropdown from "@/components/header/UserDropdown";
+// import NotificationDropdown from "@/components/header/NotificationDropdown";
+// import UserDropdown from "@/components/header/UserDropdown";
 import { useSidebar } from "@/context/SidebarContext";
 import { cn } from "@/utils";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const AppHeader: React.FC = () => {
   const { t } = useTranslation("header");
@@ -122,7 +122,7 @@ const AppHeader: React.FC = () => {
             </svg>
           </button>
 
-          <div className="hidden xl:block">
+          {/* <div className="hidden xl:block">
             <form>
               <div className="relative">
                 <span className="pointer-events-none absolute inset-s-4 top-1/2 -translate-y-1/2">
@@ -154,7 +154,7 @@ const AppHeader: React.FC = () => {
                 </button>
               </div>
             </form>
-          </div>
+          </div> */}
         </div>
         <div
           className={cn(
@@ -167,12 +167,12 @@ const AppHeader: React.FC = () => {
             <ThemeToggleButton />
             {/* <!-- Dark Mode Toggler --> */}
 
-            <NotificationDropdown />
+            {/* <NotificationDropdown /> */}
 
             {/* <!-- Notification Menu Area --> */}
           </div>
           {/* <!-- User Area --> */}
-          <UserDropdown />
+          {/* <UserDropdown /> */}
         </div>
       </div>
     </header>

@@ -1,5 +1,4 @@
-import { Route, BrowserRouter as Router, Routes } from "react-router";
-import { ScrollToTop } from "./components/common/ScrollToTop";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import AppLayout from "./layout/AppLayout";
 import SignIn from "./pages/AuthPages/SignIn";
 import SignUp from "./pages/AuthPages/SignUp";
@@ -19,15 +18,26 @@ import Images from "./pages/UiElements/Images";
 import Videos from "./pages/UiElements/Videos";
 import UserProfiles from "./pages/UserProfiles";
 
+// bank statement
+import BankStatementList from "./pages/BankStatement/BankStatementList";
+import BankStatementDetail from "./pages/BankStatement/BankStatementDetail";
+
 export default function App() {
   return (
     <>
       <Router>
-        <ScrollToTop />
         <Routes>
           {/* Dashboard Layout */}
           <Route element={<AppLayout />}>
             <Route index path="/" element={<Home />} />
+
+            {/* bank statement */}
+            <Route path="/bank-statement" element={<BankStatementList />} />
+
+            <Route
+              path="/bank-statements/:id"
+              element={<BankStatementDetail />}
+            />
 
             {/* Others Page */}
             <Route path="/profile" element={<UserProfiles />} />
