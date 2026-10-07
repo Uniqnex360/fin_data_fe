@@ -19,8 +19,12 @@ import Videos from "./pages/UiElements/Videos";
 import UserProfiles from "./pages/UserProfiles";
 
 // bank statement
-import BankStatementList from "./pages/BankStatement/BankStatementList";
-import BankStatementDetail from "./pages/BankStatement/BankStatementDetail";
+// import BankStatementList from "./pages/BankStatement/BankStatementList";
+// import BankStatementDetail from "./pages/BankStatement/BankStatementDetail";
+
+// manual bank statment
+import ManualBankStatementList from "./pages/Manual/List";
+import ManualBankStatementDetail from "./pages/Manual/Detail";
 
 export default function App() {
   return (
@@ -32,11 +36,11 @@ export default function App() {
             <Route index path="/" element={<Home />} />
 
             {/* bank statement */}
-            <Route path="/bank-statement" element={<BankStatementList />} />
+            <Route path="/bank-statement" element={<ManualBankStatementList />} />
 
             <Route
               path="/bank-statements/:id"
-              element={<BankStatementDetail />}
+              element={<ManualBankStatementDetail />}
             />
 
             {/* Others Page */}

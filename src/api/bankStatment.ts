@@ -1,5 +1,9 @@
 import api from "./axios";
 
+// ---------------------------------------------
+// Existing Types
+// ---------------------------------------------
+
 export interface BankStatement {
   id: number;
   file: string;
@@ -180,7 +184,88 @@ export interface BankStatementDetailResponse {
   action_code: string;
 }
 
+// ---------------------------------------------
+// NEW: Manual Bank Statement Types
+// ---------------------------------------------
+
+export interface ManualBankStatement {
+  id: number;
+  business_name: string | null;
+  created: string;
+}
+
+export type ManualBankStatementListResponse = ApiResponse<
+  PaginatedResponse<ManualBankStatement>
+>;
+
+export interface ManualBankStatementTransaction {
+  date: string;
+  narration: string;
+  reference: string;
+  value_date: string;
+
+  withdrawal: number | string;
+  deposit: number | string;
+  closing_balance: number | string;
+
+  page: number;
+
+  normalized_narration: string;
+
+  transaction_type: "CREDIT" | "DEBIT";
+
+  amount: number | string;
+}
+
+export interface ManualBankStatementCluster {
+  cluster_id: number;
+  cluster_key: string;
+
+  transaction_type: "CREDIT" | "DEBIT";
+
+  transaction_count: number;
+
+  total_amount: number | string;
+
+  transactions: ManualBankStatementTransaction[];
+}
+
+export interface ManualBankStatement {
+  id: number;
+
+  business_name: string | null;
+  account_reference: string | null;
+  business_type: string | null;
+  statement_period: string | null;
+
+  opening_balance: number | string | null;
+  closing_balance: number | string | null;
+
+  transactions: ManualBankStatementTransaction[];
+
+  clusters: ManualBankStatementCluster[];
+
+  model: string;
+  prompt_version: string;
+
+  updated?: string;
+}
+
+export type ManualBankStatementDetailResponse =
+  ApiResponse<ManualBankStatement>;
+
+export type ManualBankStatementExtractionResponse =
+  ApiResponse<ManualBankStatement>;
+
+// ---------------------------------------------
+// API
+// ---------------------------------------------
+
 export const bankStatementApi = {
+  // -------------------------------------------
+  // Existing APIs
+  // -------------------------------------------
+
   list: () => api.get<BankStatementListResponse>("/api/bank/file/list/"),
 
   upload: (file: File) => {
@@ -201,4 +286,25 @@ export const bankStatementApi = {
 
   detail: (id: number) =>
     api.get<BankStatementDetailResponse>(`/api/bank/statement/detail/${id}`),
+
+  // -------------------------------------------
+  // NEW: Manual Bank Statement APIs
+  // -------------------------------------------
+
+  manualList: () =>
+    api.get<ManualBankStatementListResponse>("/api/bank/manual/list/"),
+
+  manualExtraction: (file: File) => {
+    const formData = new FormData();
+
+    formData.append("file", file);
+
+    return api.post<ManualBankStatementExtractionResponse>(
+      "/api/bank/statement/manual-extraction/",
+      formData,
+    );
+  },
+
+  manualDetail: (id: number) =>
+    api.get<ManualBankStatementDetailResponse>(`/api/bank/manual/detail/${id}`),
 };
