@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -52,8 +52,6 @@ export default function ManualBankStatementList() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [file, setFile] = useState<File | null>(null);
-
   // --------------------------------
   // List
   // --------------------------------
@@ -73,8 +71,6 @@ export default function ManualBankStatementList() {
 
     onSuccess: () => {
       toast.success("Bank statement extracted successfully.");
-
-      setFile(null);
 
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
@@ -103,26 +99,17 @@ export default function ManualBankStatementList() {
       return;
     }
 
-    if (selectedFile.type !== "application/pdf") {
+    if (
+      selectedFile.type !== "application/pdf" &&
+      !selectedFile.name.toLowerCase().endsWith(".pdf")
+    ) {
       toast.error("Please select a PDF file.");
       event.target.value = "";
       return;
     }
 
-    setFile(selectedFile);
-  };
-
-  // --------------------------------
-  // Upload
-  // --------------------------------
-  //@ts-ignore
-  const handleUpload = () => {
-    if (!file) {
-      toast.error("Please select a bank statement.");
-      return;
-    }
-
-    uploadMutation.mutate(file);
+    // Automatically upload/extract as soon as PDF is selected
+    uploadMutation.mutate(selectedFile);
   };
 
   // --------------------------------
@@ -142,25 +129,25 @@ export default function ManualBankStatementList() {
 
       <div className="space-y-6">
         {/* Upload */}
-          <div className="flex justify-end">
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".pdf,application/pdf"
-              onChange={handleFileChange}
-              disabled={uploadMutation.isPending}
-              className="hidden"
-            />
+        <div className="flex justify-end">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,application/pdf"
+            onChange={handleFileChange}
+            disabled={uploadMutation.isPending}
+            className="hidden"
+          />
 
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={uploadMutation.isPending}
-              className="inline-flex items-center justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {uploadMutation.isPending ? "Extracting..." : "Upload & Extract"}
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadMutation.isPending}
+            className="inline-flex items-center justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white shadow-theme-xs transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {uploadMutation.isPending ? "Extracting..." : "Upload & Extract"}
+          </button>
+        </div>
 
         {/* List */}
         <ComponentCard title="Bank Statements">
