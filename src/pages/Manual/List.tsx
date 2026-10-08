@@ -99,19 +99,22 @@ export default function ManualBankStatementList() {
       return;
     }
 
-    if (
-      selectedFile.type !== "application/pdf" &&
-      !selectedFile.name.toLowerCase().endsWith(".pdf")
-    ) {
-      toast.error("Please select a PDF file.");
+    const fileName = selectedFile.name.toLowerCase();
+
+    const isSupported =
+      fileName.endsWith(".pdf") ||
+      fileName.endsWith(".csv") ||
+      fileName.endsWith(".xlsx");
+
+    if (!isSupported) {
+      toast.error("Please select a PDF, CSV, or XLSX file.");
       event.target.value = "";
       return;
     }
 
-    // Automatically upload/extract as soon as PDF is selected
+    // Automatically upload/extract as soon as file is selected
     uploadMutation.mutate(selectedFile);
   };
-
   // --------------------------------
   // Data
   // --------------------------------
@@ -133,7 +136,7 @@ export default function ManualBankStatementList() {
           <input
             ref={fileInputRef}
             type="file"
-            accept=".pdf,application/pdf"
+            accept=".pdf,.csv,.xlsx,application/pdf,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             onChange={handleFileChange}
             disabled={uploadMutation.isPending}
             className="hidden"
@@ -227,7 +230,7 @@ export default function ManualBankStatementList() {
                           </p>
 
                           <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
-                            Upload a PDF bank statement to get started.
+                            Upload a PDF, CSV, or Excel bank statement to get started.
                           </p>
                         </td>
                       </tr>
